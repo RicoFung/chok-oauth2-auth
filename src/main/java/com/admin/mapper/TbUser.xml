@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+
+<mapper namespace="com.admin.entity.TbUser">
+  	
+	<resultMap type="com.admin.entity.TbUser" id="result">
+        <id property="id" column="id"/>
+        <result property="tcCode" column="tc_code"/>
+        <result property="tcName" column="tc_name"/>
+        <result property="tcEmail" column="tc_email"/>
+        <result property="tcPassword" column="tc_password"/>
+        <result property="tcAddTime" column="tc_add_time"/>
+        <result property="tcEnable" column="tc_enable"/>
+	</resultMap>
+  	
+	<resultMap type="com.admin.entity.TbUser" id="userRoleResult" extends="result">
+        <collection property="tcRoles" ofType="com.admin.entity.TbRole">
+	        <id property="id" column="role_id"/>
+	        <result property="tcCode" column="role_code"/>
+	        <result property="tcName" column="role_name"/>
+        </collection>
+	</resultMap>
+  	
+	<sql id="columns">
+		t.id, t.tc_code, t.tc_name, t.tc_email, t.tc_password, t.tc_add_time, t.tc_enable 
+	</sql>
+	<sql id="roleColumns">
+		t3.id as role_id, t3.tc_code as role_code, t3.tc_name as role_name
+	</sql>
+	
+	<select id="getByUsername" resultMap="userRoleResult">
+		SELECT <include refid="columns"/>, <include refid="roleColumns"/>
+		  FROM tb_user t
+		  LEFT JOIN tb_user_role t2 on t.id = t2.tc_user_id
+		  LEFT JOIN tb_role t3 on t2.tc_role_id = t3.id
+	     WHERE t.tc_code = #{username}
+	</select>
+	
+</mapper>  
