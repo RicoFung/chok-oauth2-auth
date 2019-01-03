@@ -26,17 +26,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter
 	@Override
 	public void configure(HttpSecurity http) throws Exception
 	{
-		// @formatter:off
 		http
 		// Since we want the protected resources to be accessible in the UI as well we
 		// need
 		// session creation to be allowed (it's disabled by default in 2.0.6)
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and().requestMatchers()
 		.anyRequest().and().anonymous().and().authorizeRequests()
-		// .antMatchers("/order/**").access("#oauth2.hasScope('select') and
-		// hasRole('ROLE_USER')")
+		// .antMatchers("/order/**").access("#oauth2.hasScope('select') and hasRole('ROLE_USER')")
 		.antMatchers("/product/**").authenticated();// 配置order访问控制，必须认证过后才可以访问
-		// @formatter:on
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter
 		{
 			log.error(authException.getMessage());
 			request.setAttribute("msg", authException.getMessage());
-			request.getRequestDispatcher("error/401").forward(request, response);
+			request.getRequestDispatcher("/error/401").forward(request, response);
 		}
 	}
 }
